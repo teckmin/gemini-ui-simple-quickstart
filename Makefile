@@ -3,7 +3,7 @@
 help:
 	@echo "Available commands:"
 	@echo "  make dev-frontend    - Starts the frontend development server (Vite)"
-	@echo "  make dev-backend     - Starts the backend development server (Uvicorn with reload)"
+       @echo "  make dev-backend     - Starts the backend development server (Vite)"
 	@echo "  make dev             - Starts both frontend and backend development servers"
 
 dev-frontend:
@@ -11,8 +11,8 @@ dev-frontend:
 	@cd frontend && npm run dev
 
 dev-backend:
-	@echo "Starting backend development server..."
-	@cd backend && langgraph dev
+       @echo "Starting backend development server..."
+       @cd backend-node && npm run dev
 
 # Run frontend and backend concurrently
 dev:
