@@ -28,6 +28,6 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({
         hasHistory={false}
       />
     </div>
-    <p className="text-xs text-neutral-500">Powered by Google Gemini.</p>
+    <p className="text-xs text-neutral-500">Powered by OpenAI Semantic Kernel.</p>
   </div>
 );

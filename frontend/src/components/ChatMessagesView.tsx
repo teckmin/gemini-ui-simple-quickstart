@@ -8,16 +8,12 @@ import { useState, ReactNode } from "react";
 import ReactMarkdown from "react-markdown";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
-import {
-  ActivityTimeline,
-  ProcessedEvent,
-} from "@/components/ActivityTimeline"; // Assuming ActivityTimeline is in the same dir or adjust path
 
 // Markdown component props type from former ReportView
 type MdComponentProps = {
   className?: string;
   children?: ReactNode;
-  [key: string]: any;
+  [key: string]: unknown;
 };
 
 // Markdown components (from former ReportView.tsx)
@@ -161,10 +157,6 @@ const HumanMessageBubble: React.FC<HumanMessageBubbleProps> = ({
 // Props for AiMessageBubble
 interface AiMessageBubbleProps {
   message: Message;
-  historicalActivity: ProcessedEvent[] | undefined;
-  liveActivity: ProcessedEvent[] | undefined;
-  isLastMessage: boolean;
-  isOverallLoading: boolean;
   mdComponents: typeof mdComponents;
   handleCopy: (text: string, messageId: string) => void;
   copiedMessageId: string | null;
@@ -173,29 +165,12 @@ interface AiMessageBubbleProps {
 // AiMessageBubble Component
 const AiMessageBubble: React.FC<AiMessageBubbleProps> = ({
   message,
-  historicalActivity,
-  liveActivity,
-  isLastMessage,
-  isOverallLoading,
   mdComponents,
   handleCopy,
   copiedMessageId,
 }) => {
-  // Determine which activity events to show and if it's for a live loading message
-  const activityForThisBubble =
-    isLastMessage && isOverallLoading ? liveActivity : historicalActivity;
-  const isLiveActivityForThisBubble = isLastMessage && isOverallLoading;
-
   return (
     <div className={`relative break-words flex flex-col`}>
-      {activityForThisBubble && activityForThisBubble.length > 0 && (
-        <div className="mb-3 border-b border-neutral-700 pb-3 text-xs">
-          <ActivityTimeline
-            processedEvents={activityForThisBubble}
-            isLoading={isLiveActivityForThisBubble}
-          />
-        </div>
-      )}
       <ReactMarkdown components={mdComponents}>
         {typeof message.content === "string"
           ? message.content
@@ -226,8 +201,6 @@ interface ChatMessagesViewProps {
   scrollAreaRef: React.RefObject<HTMLDivElement | null>;
   onSubmit: (inputValue: string) => void;
   onCancel: () => void;
-  liveActivityEvents: ProcessedEvent[];
-  historicalActivities: Record<string, ProcessedEvent[]>;
 }
 
 export function ChatMessagesView({
@@ -236,8 +209,6 @@ export function ChatMessagesView({
   scrollAreaRef,
   onSubmit,
   onCancel,
-  liveActivityEvents,
-  historicalActivities,
 }: ChatMessagesViewProps) {
   const [copiedMessageId, setCopiedMessageId] = useState<string | null>(null);
 
@@ -256,7 +227,6 @@ export function ChatMessagesView({
       <ScrollArea className="flex-grow" ref={scrollAreaRef}>
         <div className="p-4 md:p-6 space-y-2 max-w-4xl mx-auto pt-16">
           {messages.map((message, index) => {
-            const isLast = index === messages.length - 1;
             return (
               <div key={message.id || `msg-${index}`} className="space-y-3">
                 <div
@@ -270,12 +240,8 @@ export function ChatMessagesView({
                       mdComponents={mdComponents}
                     />
                   ) : (
-                    <AiMessageBubble
+                  <AiMessageBubble
                       message={message}
-                      historicalActivity={historicalActivities[message.id!]}
-                      liveActivity={liveActivityEvents} // Pass global live events
-                      isLastMessage={isLast}
-                      isOverallLoading={isLoading} // Pass global loading state
                       mdComponents={mdComponents}
                       handleCopy={handleCopy}
                       copiedMessageId={copiedMessageId}
@@ -289,22 +255,11 @@ export function ChatMessagesView({
             (messages.length === 0 ||
               messages[messages.length - 1].type === "human") && (
               <div className="flex items-start gap-3 mt-3">
-                {" "}
-                {/* AI message row structure */}
                 <div className="relative group max-w-[85%] md:max-w-[80%] rounded-xl p-3 shadow-sm break-words bg-neutral-800 text-neutral-100 rounded-bl-none w-full min-h-[56px]">
-                  {liveActivityEvents.length > 0 ? (
-                    <div className="text-xs">
-                      <ActivityTimeline
-                        processedEvents={liveActivityEvents}
-                        isLoading={true}
-                      />
-                    </div>
-                  ) : (
-                    <div className="flex items-center justify-start h-full">
-                      <Loader2 className="h-5 w-5 animate-spin text-neutral-400 mr-2" />
-                      <span>Processing...</span>
-                    </div>
-                  )}
+                  <div className="flex items-center justify-start h-full">
+                    <Loader2 className="h-5 w-5 animate-spin text-neutral-400 mr-2" />
+                    <span>Processing...</span>
+                  </div>
                 </div>
               </div>
             )}

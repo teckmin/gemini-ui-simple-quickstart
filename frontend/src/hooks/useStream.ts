@@ -1,21 +1,21 @@
 import { useState, useRef, useCallback } from "react";
 import type { Message } from "@/types";
 
-interface Options<T> {
+interface Options {
   apiUrl: string;
   assistantId: string;
   messagesKey: string;
-  onFinish?: (event: any) => void;
-  onUpdateEvent?: (event: any) => void;
+  onFinish?: (event: unknown) => void;
+  onUpdateEvent?: (event: unknown) => void;
 }
 
-export function useStream<T extends Record<string, unknown>>(options: Options<T>) {
+export function useStream(options: Options) {
   const { apiUrl, assistantId, messagesKey, onFinish, onUpdateEvent } = options;
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const eventSourceRef = useRef<EventSource | null>(null);
 
-  const submit = useCallback(async (payload: T) => {
+  const submit = useCallback(async (payload: Record<string, unknown>) => {
     setIsLoading(true);
     try {
       const res = await fetch(`${apiUrl}/assistants/${assistantId}/invoke`, {
