@@ -11,9 +11,10 @@ This project provides a small React frontend that communicates with an external 
 
 ## Project Structure
 
-The project contains a single directory:
+The project contains two directories:
 
 -   `frontend/`: The React application built with Vite.
+-   `backend/`: An Express server that forwards chat requests to an external API.
 
 ## Getting Started: Development and Local Testing
 
@@ -28,11 +29,27 @@ Follow these steps to get the application running locally for development and te
 ```bash
 cd frontend
 npm install
+
+cd ../backend
+npm install
 ```
 
-**3. Run the Development Server:**
+**3. Configure Environment Variables:**
+
+Create a `.env` file in the `backend` directory and set `EXTERNAL_API_URL` to the
+URL that should receive chat messages. The backend allows requests from
+`http://localhost:5173` by default. You can override the allowed origin with the
+`FRONTEND_ORIGIN` variable.
+
+**4. Run the Development Servers:**
+
+Open two terminals and run the backend and frontend:
 
 ```bash
+# Terminal 1
+npm start --prefix backend
+
+# Terminal 2
 make dev
 ```
 Open your browser and navigate to `http://localhost:5173`.
