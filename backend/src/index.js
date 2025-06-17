@@ -1,5 +1,6 @@
 import express from 'express';
 import dotenv from 'dotenv';
+import cors from 'cors';
 
 dotenv.config();
 
@@ -8,6 +9,7 @@ const PORT = process.env.PORT || 2024;
 const EXTERNAL_API_URL = process.env.EXTERNAL_API_URL;
 
 app.use(express.json());
+app.use(cors({ origin: 'http://localhost:5173' }));
 
 app.post('/', async (req, res) => {
   if (!EXTERNAL_API_URL) {
