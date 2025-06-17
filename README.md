@@ -34,7 +34,14 @@ cd ../backend
 npm install
 ```
 
-**3. Run the Development Servers:**
+**3. Configure Environment Variables:**
+
+Create a `.env` file in the `backend` directory and set `EXTERNAL_API_URL` to the
+URL that should receive chat messages. The backend allows requests from
+`http://localhost:5173` by default. You can override the allowed origin with the
+`FRONTEND_ORIGIN` variable.
+
+**4. Run the Development Servers:**
 
 Open two terminals and run the backend and frontend:
 
